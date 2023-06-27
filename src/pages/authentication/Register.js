@@ -17,29 +17,30 @@ import { Form, useFormik, FormikProvider } from "formik";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { LoginAPI } from "../../apis/Autentication";
+import { RegisterAPI } from "../../apis/Autentication";
 
 const defaultTheme = createTheme();
 
-const Login = () => {
-  // const LoginSchema = object.shape({
+const Register = () => {
+  // const RegisterSchema = object.shape({
   //   email: string()
   //     .email("Email must be a valid email address")
   //     .required("Email is Required"),
   //   password: string().required("Password is Required"),
   // });
 
-  const LoginSchema = {};
+  const RegisterSchema = {};
 
   const formik = useFormik({
     initialValues: {
+      fullname: "",
       email: "",
       password: "",
     },
-    validationSchema: LoginSchema,
+    validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
-        await LoginAPI(values.email, values.password);
+        await RegisterAPI(values.fullname, values.email, values.password);
       } catch (error) {
         console.log(error);
         resetForm();
@@ -84,7 +85,7 @@ const Login = () => {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Sign Up
             </Typography>
             <Box component="form" noValidate sx={{ mt: 1 }}>
               <FormikProvider value={formik}>
@@ -93,13 +94,22 @@ const Login = () => {
                     <TextField
                       margin="normal"
                       fullWidth
+                      type="text"
+                      label="Full Name"
+                      autoComplete="fullname"
+                      {...getFieldProps("text")}
+                      error={Boolean(touched.fullname && errors.fullname)}
+                      helperText={touched.fullname && errors.fullname}
+                    />
+                    <TextField
+                      margin="normal"
+                      fullWidth
                       type="email"
                       label="Email Address"
                       autoComplete="email"
-                      {...getFieldProps('email')}
+                      {...getFieldProps("email")}
                       error={Boolean(touched.email && errors.email)}
                       helperText={touched.email && errors.email}
-
                     />
                     <TextField
                       margin="normal"
@@ -107,9 +117,20 @@ const Login = () => {
                       label="Password"
                       type="password"
                       autoComplete="current-password"
-                      {...getFieldProps('password')}
+                      {...getFieldProps("password")}
                       error={Boolean(touched.password && errors.password)}
                       helperText={touched.password && errors.password}
+                    />
+
+                    <TextField
+                      margin="normal"
+                      fullWidth
+                      label="Confirm Password"
+                      type="password"
+                      autoComplete="current-password"
+                      {...getFieldProps("password")}
+                      error={Boolean(touched.cpassword && errors.colorpassword)}
+                      helperText={touched.cpassword && errors.cpassword}
                     />
                     <FormControlLabel
                       control={<Checkbox value="remember" color="primary" />}
@@ -121,17 +142,12 @@ const Login = () => {
                       variant="contained"
                       sx={{ mt: 3, mb: 2 }}
                     >
-                      Sign In
+                      Sign Up
                     </Button>
                     <Grid container>
-                      <Grid item xs>
-                        <Link href="#" variant="body2">
-                          Forgot password?
-                        </Link>
-                      </Grid>
                       <Grid item>
                         <Link href="#" variant="body2">
-                          {"Don't have an account? Sign Up"}
+                          {"Already Have an Account? Sign In"}
                         </Link>
                       </Grid>
                     </Grid>
@@ -146,4 +162,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
