@@ -1,54 +1,47 @@
 import * as React from "react";
-import { object, string } from "yup";
+import * as Yup from 'yup';
 import {
   TextField,
   Avatar,
   Button,
   CssBaseline,
-  FormControlLabel,
-  Checkbox,
-  Link,
   Paper,
   Box,
   Grid,
   Stack,
 } from "@mui/material";
-import { Form, useFormik, FormikProvider } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { LoginAPI } from "../../apis/Autentication";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 const Login = () => {
-  // const LoginSchema = object.shape({
-  //   email: string()
-  //     .email("Email must be a valid email address")
-  //     .required("Email is Required"),
-  //   password: string().required("Password is Required"),
-  // });
 
-  const LoginSchema = {};
+  const navigate = useNavigate();
 
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: LoginSchema,
-    onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
-      try {
-        await LoginAPI(values.email, values.password);
-      } catch (error) {
-        console.log(error);
-        resetForm();
-      }
-    },
+  const initialValues = {
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string()
+      .required("Password is required"),
   });
 
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } =
-    formik;
+  const handleSubmit = (values) => {
+    LoginAPI(values) ? navigate("/feed") : alert('Entered Password is Wrong');
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: "100vh" }}>
@@ -86,58 +79,59 @@ const Login = () => {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate sx={{ mt: 1 }}>
-              <FormikProvider value={formik}>
-                <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                  <Stack spacing={3}>
-                    <TextField
-                      margin="normal"
-                      fullWidth
-                      type="email"
-                      label="Email Address"
-                      autoComplete="email"
-                      {...getFieldProps('email')}
-                      error={Boolean(touched.email && errors.email)}
-                      helperText={touched.email && errors.email}
+            <Box noValidate sx={{ mt: 1 }}>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                {({ isSubmitting }) => (
+                  <Form>
+                    <Stack spacing={3}>
+                      <div>
+                        <Field
+                          as={TextField}
+                          type="email"
+                          label="Email"
+                          name="email"
+                          variant="outlined"
+                          fullWidth
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="div"
+                          className="error"
+                        />
+                      </div>
 
-                    />
-                    <TextField
-                      margin="normal"
-                      fullWidth
-                      label="Password"
-                      type="password"
-                      autoComplete="current-password"
-                      {...getFieldProps('password')}
-                      error={Boolean(touched.password && errors.password)}
-                      helperText={touched.password && errors.password}
-                    />
-                    <FormControlLabel
-                      control={<Checkbox value="remember" color="primary" />}
-                      label="Remember me"
-                    />
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      sx={{ mt: 3, mb: 2 }}
-                    >
-                      Sign In
-                    </Button>
-                    <Grid container>
-                      <Grid item xs>
-                        <Link href="#" variant="body2">
-                          Forgot password?
-                        </Link>
-                      </Grid>
-                      <Grid item>
-                        <Link href="#" variant="body2">
-                          {"Don't have an account? Sign Up"}
-                        </Link>
-                      </Grid>
-                    </Grid>
-                  </Stack>
-                </Form>
-              </FormikProvider>
+                      <div>
+                        <Field
+                          as={TextField}
+                          type="password"
+                          label="Password"
+                          name="password"
+                          variant="outlined"
+                          fullWidth
+                        />
+                        <ErrorMessage
+                          name="password"
+                          component="div"
+                          className="error"
+                        />
+                      </div>
+
+                     
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                      >
+                        Login
+                      </Button>
+                    </Stack>
+                  </Form>
+                )}
+              </Formik>
             </Box>
           </Box>
         </Grid>

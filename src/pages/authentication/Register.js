@@ -15,12 +15,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { RegisterAPI } from "../../apis/Autentication";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 const Register = () => {
-  const  navigate = useNavigate ();
+  const navigate = useNavigate();
   const initialValues = {
     fullName: "",
     email: "",
@@ -42,9 +42,8 @@ const Register = () => {
   });
 
   const handleSubmit = (values) => {
-    console.log("Form values:", values);
     RegisterAPI(values);
-    navigate('/');
+    navigate("/");
   };
 
   return (
