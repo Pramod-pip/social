@@ -5,15 +5,12 @@ import {
   Avatar,
   Button,
   CssBaseline,
-  FormControlLabel,
-  Checkbox,
-  Link,
   Paper,
   Box,
   Grid,
   Stack,
 } from "@mui/material";
-import { Form, useFormik, FormikProvider } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -22,34 +19,47 @@ import { RegisterAPI } from "../../apis/Autentication";
 const defaultTheme = createTheme();
 
 const Register = () => {
-  // const RegisterSchema = object.shape({
-  //   email: string()
-  //     .email("Email must be a valid email address")
-  //     .required("Email is Required"),
-  //   password: string().required("Password is Required"),
-  // });
+  const initialValues = {
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
 
-  const RegisterSchema = {};
+  const handleSubmit = (values) => {
+    // Add logic to store the registered user information in your mock API
+    RegisterAPI.push(values);
+    console.log("User registered:", values);
+  };
 
-  const formik = useFormik({
-    initialValues: {
-      fullname: "",
-      email: "",
-      password: "",
-    },
-    validationSchema: RegisterSchema,
-    onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
-      try {
-        await RegisterAPI(values.fullname, values.email, values.password);
-      } catch (error) {
-        console.log(error);
-        resetForm();
-      }
-    },
-  });
+  const validateForm = (values) => {
+    const errors = {};
 
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } =
-    formik;
+    if (!values.fullName) {
+      errors.fullName = "Full Name is required";
+    }
+
+    if (!values.email) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+      errors.email = "Invalid email address";
+    }
+
+    if (!values.password) {
+      errors.password = "Password is required";
+    } else if (values.password.length < 6) {
+      errors.password = "Password must be at least 6 characters long";
+    }
+
+    if (!values.confirmPassword) {
+      errors.confirmPassword = "Confirm Password is required";
+    } else if (values.password !== values.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    return errors;
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: "100vh" }}>
@@ -88,72 +98,83 @@ const Register = () => {
               Sign Up
             </Typography>
             <Box component="form" noValidate sx={{ mt: 1 }}>
-              <FormikProvider value={formik}>
-                <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+              <Formik
+                initialValues={initialValues}
+                onSubmit={handleSubmit}
+                validate={validateForm}
+              >
+                <Form>
                   <Stack spacing={3}>
-                    <TextField
-                      margin="normal"
-                      fullWidth
-                      type="text"
-                      label="Full Name"
-                      autoComplete="fullname"
-                      {...getFieldProps("text")}
-                      error={Boolean(touched.fullname && errors.fullname)}
-                      helperText={touched.fullname && errors.fullname}
-                    />
-                    <TextField
-                      margin="normal"
-                      fullWidth
-                      type="email"
-                      label="Email Address"
-                      autoComplete="email"
-                      {...getFieldProps("email")}
-                      error={Boolean(touched.email && errors.email)}
-                      helperText={touched.email && errors.email}
-                    />
-                    <TextField
-                      margin="normal"
-                      fullWidth
-                      label="Password"
-                      type="password"
-                      autoComplete="current-password"
-                      {...getFieldProps("password")}
-                      error={Boolean(touched.password && errors.password)}
-                      helperText={touched.password && errors.password}
-                    />
+                    <div>
+                      <Field
+                        as={TextField}
+                        type="text"
+                        name="fullName"
+                        label="Full Name"
+                        variant="outlined"
+                        fullWidth
+                      />
+                      <ErrorMessage
+                        name="fullName"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
 
-                    <TextField
-                      margin="normal"
-                      fullWidth
-                      label="Confirm Password"
-                      type="password"
-                      autoComplete="current-password"
-                      {...getFieldProps("password")}
-                      error={Boolean(touched.cpassword && errors.colorpassword)}
-                      helperText={touched.cpassword && errors.cpassword}
-                    />
-                    <FormControlLabel
-                      control={<Checkbox value="remember" color="primary" />}
-                      label="Remember me"
-                    />
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      sx={{ mt: 3, mb: 2 }}
-                    >
-                      Sign Up
+                    <div>
+                      <Field
+                        as={TextField}
+                        type="email"
+                        name="email"
+                        label="Email"
+                        variant="outlined"
+                        fullWidth
+                      />
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
+
+                    <div>
+                      <Field
+                        as={TextField}
+                        type="password"
+                        name="password"
+                        label="Password"
+                        variant="outlined"
+                        fullWidth
+                      />
+                      <ErrorMessage
+                        name="password"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
+
+                    <div>
+                      <Field
+                        as={TextField}
+                        type="password"
+                        name="confirmPassword"
+                        label="Confirm Password"
+                        variant="outlined"
+                        fullWidth
+                      />
+                      <ErrorMessage
+                        name="confirmPassword"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
+
+                    <Button type="submit" variant="contained" color="primary">
+                      Register
                     </Button>
-                    <Grid container>
-                      <Grid item>
-                        <Link href="#" variant="body2">
-                          {"Already Have an Account? Sign In"}
-                        </Link>
-                      </Grid>
-                    </Grid>
                   </Stack>
                 </Form>
-              </FormikProvider>
+              </Formik>
             </Box>
           </Box>
         </Grid>

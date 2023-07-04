@@ -1,17 +1,20 @@
-import React from 'react';
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from './pages/authentication/Login';
-import Register from './pages/authentication/Register';
-import Feed from './pages/Feed/Feed';
+import Login from "./pages/authentication/Login";
+import Register from "./pages/authentication/Register";
+import Feed from "./pages/Feed/Feed";
+import "./App.css";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />}></Route>
-          <Route path="/register" element={<Register />} ></Route>
-          <Route path="/feed" element={<Feed />} ></Route>
-      </Routes>
+      <div className="app">
+        <Routes>
+          <Route path="/" element={<Login />}></Route>
+          <Route path="/register" element={<Register />}></Route>
+          <Route path="/feed" element={<Feed />}></Route>
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }
