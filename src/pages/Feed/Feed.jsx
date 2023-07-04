@@ -24,9 +24,9 @@ const Feed = () => {
       <div className="app__body">
         <SideBar />
         <div className="feed">
-          {posts.map((post) => (
+          {posts.map((post,idx) => (
             <Post
-              key={post.id}
+              key={idx}
               profilePic={post?.data.profilePic}
               message={post?.data.message}
               timestamp={post?.data.timestamp}

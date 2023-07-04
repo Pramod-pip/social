@@ -7,11 +7,7 @@ import FlagIcon from "@mui/icons-material/Flag";
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
-import { Avatar, IconButton } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import ForumIcon from "@mui/icons-material/Forum";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Avatar } from "@mui/material";
 
 const Header = () => {
   const user  = {};
@@ -49,24 +45,6 @@ const Header = () => {
         <div className="header__info">
           <Avatar src={user?.photoURL} />
           <h4>{user?.displayName}</h4>
-        </div>
-
-        <div className="header__right__icons">
-          <IconButton>
-            <AddIcon />
-          </IconButton>
-
-          <IconButton>
-            <ForumIcon />
-          </IconButton>
-
-          <IconButton>
-            <NotificationsActiveIcon />
-          </IconButton>
-
-          <IconButton>
-            <ExpandMoreIcon />
-          </IconButton>
         </div>
       </div>
     </div>
