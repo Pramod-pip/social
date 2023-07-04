@@ -1,5 +1,5 @@
 import * as React from "react";
-import { object, string } from "yup";
+import * as Yup from "yup";
 import {
   TextField,
   Avatar,
@@ -15,10 +15,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { RegisterAPI } from "../../apis/Autentication";
+import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme();
 
 const Register = () => {
+  const  navigate = useNavigate ();
   const initialValues = {
     fullName: "",
     email: "",
@@ -26,38 +28,23 @@ const Register = () => {
     confirmPassword: "",
   };
 
+  const validationSchema = Yup.object({
+    fullName: Yup.string().required("Full Name is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters long")
+      .required("Password is required"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .required("Confirm Password is required"),
+  });
+
   const handleSubmit = (values) => {
-    // Add logic to store the registered user information in your mock API
-    RegisterAPI.push(values);
-    console.log("User registered:", values);
-  };
-
-  const validateForm = (values) => {
-    const errors = {};
-
-    if (!values.fullName) {
-      errors.fullName = "Full Name is required";
-    }
-
-    if (!values.email) {
-      errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      errors.email = "Invalid email address";
-    }
-
-    if (!values.password) {
-      errors.password = "Password is required";
-    } else if (values.password.length < 6) {
-      errors.password = "Password must be at least 6 characters long";
-    }
-
-    if (!values.confirmPassword) {
-      errors.confirmPassword = "Confirm Password is required";
-    } else if (values.password !== values.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
-    }
-
-    return errors;
+    console.log("Form values:", values);
+    RegisterAPI(values);
+    navigate('/');
   };
 
   return (
@@ -97,83 +84,90 @@ const Register = () => {
             <Typography component="h1" variant="h5">
               Sign Up
             </Typography>
-            <Box component="form" noValidate sx={{ mt: 1 }}>
+            <Box noValidate sx={{ mt: 1 }}>
               <Formik
                 initialValues={initialValues}
+                validationSchema={validationSchema}
                 onSubmit={handleSubmit}
-                validate={validateForm}
               >
-                <Form>
-                  <Stack spacing={3}>
-                    <div>
-                      <Field
-                        as={TextField}
-                        type="text"
-                        name="fullName"
-                        label="Full Name"
-                        variant="outlined"
-                        fullWidth
-                      />
-                      <ErrorMessage
-                        name="fullName"
-                        component="div"
-                        className="error"
-                      />
-                    </div>
+                {({ isSubmitting }) => (
+                  <Form>
+                    <Stack spacing={3}>
+                      <div>
+                        <Field
+                          as={TextField}
+                          type="text"
+                          label="Full Name"
+                          name="fullName"
+                          variant="outlined"
+                          fullWidth
+                        />
+                        <ErrorMessage
+                          name="fullName"
+                          component="div"
+                          className="error"
+                        />
+                      </div>
 
-                    <div>
-                      <Field
-                        as={TextField}
-                        type="email"
-                        name="email"
-                        label="Email"
-                        variant="outlined"
-                        fullWidth
-                      />
-                      <ErrorMessage
-                        name="email"
-                        component="div"
-                        className="error"
-                      />
-                    </div>
+                      <div>
+                        <Field
+                          as={TextField}
+                          type="email"
+                          label="Email"
+                          name="email"
+                          variant="outlined"
+                          fullWidth
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="div"
+                          className="error"
+                        />
+                      </div>
 
-                    <div>
-                      <Field
-                        as={TextField}
-                        type="password"
-                        name="password"
-                        label="Password"
-                        variant="outlined"
-                        fullWidth
-                      />
-                      <ErrorMessage
-                        name="password"
-                        component="div"
-                        className="error"
-                      />
-                    </div>
+                      <div>
+                        <Field
+                          as={TextField}
+                          type="password"
+                          label="Password"
+                          name="password"
+                          variant="outlined"
+                          fullWidth
+                        />
+                        <ErrorMessage
+                          name="password"
+                          component="div"
+                          className="error"
+                        />
+                      </div>
 
-                    <div>
-                      <Field
-                        as={TextField}
-                        type="password"
-                        name="confirmPassword"
-                        label="Confirm Password"
-                        variant="outlined"
-                        fullWidth
-                      />
-                      <ErrorMessage
-                        name="confirmPassword"
-                        component="div"
-                        className="error"
-                      />
-                    </div>
+                      <div>
+                        <Field
+                          as={TextField}
+                          type="password"
+                          label="Confirm Password"
+                          name="confirmPassword"
+                          variant="outlined"
+                          fullWidth
+                        />
+                        <ErrorMessage
+                          name="confirmPassword"
+                          component="div"
+                          className="error"
+                        />
+                      </div>
 
-                    <Button type="submit" variant="contained" color="primary">
-                      Register
-                    </Button>
-                  </Stack>
-                </Form>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={isSubmitting}
+                      >
+                        Register
+                      </Button>
+                    </Stack>
+                  </Form>
+                )}
               </Formik>
             </Box>
           </Box>
