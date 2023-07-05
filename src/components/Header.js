@@ -14,7 +14,7 @@ const Header = () => {
     <div className="header">
       <div className="header__left">
         <img
-          src="https://unsplash.com/photos/H88PXUVjd7U"
+          src="https://www.vhv.rs/dpng/d/524-5246899_react-js-react-app-logo-png-transparent-png.png"
           alt="facebook"
         />
       </div>
