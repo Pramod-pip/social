@@ -15,7 +15,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { RegisterAPI } from "../../apis/Autentication";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
@@ -164,6 +164,7 @@ const Register = () => {
                       >
                         Register
                       </Button>
+                      <Link to="/"> If already Registered. Please Login</Link>
                     </Stack>
                   </Form>
                 )}
