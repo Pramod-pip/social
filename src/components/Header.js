@@ -1,7 +1,5 @@
 import React from "react";
 import "./Header.css";
-
-import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
 import FlagIcon from "@mui/icons-material/Flag";
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
@@ -16,13 +14,9 @@ const Header = () => {
     <div className="header">
       <div className="header__left">
         <img
-          src="https://raw.githubusercontent.com/SoumyaSagnik/Facebook-Clone/main/images/facebook-logo.png"
+          src="https://unsplash.com/photos/H88PXUVjd7U"
           alt="facebook"
         />
-        <div className="header__input">
-          <SearchIcon />
-          <input type="text" placeholder="Search" />
-        </div>
       </div>
       <div className="header__center">
         <div className="header__option header__option--active">
